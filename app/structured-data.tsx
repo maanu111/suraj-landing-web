@@ -1,4 +1,4 @@
-import { SITE_URL, absoluteUrl, getSeo, seoStr } from "@/lib/seo";
+import { absoluteUrl, getSeo, seoStr } from "@/lib/seo";
 import { toList } from "@/lib/content";
 
 const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string, unknown>[]) : []);
@@ -12,7 +12,7 @@ const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string
  * once the reviews are genuine and attributable.
  */
 export default async function StructuredData() {
-  const { seo, content } = await getSeo();
+  const { seo, origin, content } = await getSeo();
 
   const siteName = seoStr(seo.siteName) || "Studio";
   const businessName = seoStr(seo.businessName) || siteName;
@@ -43,12 +43,12 @@ export default async function StructuredData() {
 
   const organisation = {
     "@type": "ProfessionalService",
-    "@id": `${SITE_URL}/#organisation`,
+    "@id": `${origin}/#organisation`,
     name: businessName,
     alternateName: siteName !== businessName ? siteName : undefined,
     description,
-    url: SITE_URL,
-    image: absoluteUrl(seoStr(seo.ogImage) || "/opengraph-image"),
+    url: origin,
+    image: absoluteUrl(origin, seoStr(seo.ogImage) || "/opengraph-image"),
     telephone: seoStr(seo.phone) || undefined,
     email: seoStr(seo.email) || undefined,
     priceRange: seoStr(seo.priceRange) || undefined,
@@ -64,12 +64,12 @@ export default async function StructuredData() {
 
   const website = {
     "@type": "WebSite",
-    "@id": `${SITE_URL}/#website`,
-    url: SITE_URL,
+    "@id": `${origin}/#website`,
+    url: origin,
     name: siteName,
     description,
     inLanguage: seoStr(seo.locale)?.replace("_", "-") || "en-IN",
-    publisher: { "@id": `${SITE_URL}/#organisation` },
+    publisher: { "@id": `${origin}/#organisation` },
   };
 
   const graph = {

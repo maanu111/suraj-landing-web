@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, JetBrains_Mono } from "next/font/google";
-import { SITE_URL, absoluteUrl, getSeo, seoStr } from "@/lib/seo";
+import { absoluteUrl, getSeo, seoStr } from "@/lib/seo";
 import "./globals.css";
 
 const sans = Inter({
@@ -29,7 +29,7 @@ export const viewport: Viewport = {
  * the client edits their search listing in the admin rather than in code.
  */
 export async function generateMetadata(): Promise<Metadata> {
-  const { seo } = await getSeo();
+  const { seo, origin } = await getSeo();
 
   const siteName = seoStr(seo.siteName);
   const title = seoStr(seo.title);
@@ -44,10 +44,10 @@ export async function generateMetadata(): Promise<Metadata> {
   const blocked = /^(yes|true|1)$/i.test(seoStr(seo.noindex));
 
   // Falls back to the generated opengraph-image.tsx when none is set.
-  const images = ogImage ? [{ url: absoluteUrl(ogImage), width: 1200, height: 630, alt: title }] : undefined;
+  const images = ogImage ? [{ url: absoluteUrl(origin, ogImage), width: 1200, height: 630, alt: title }] : undefined;
 
   return {
-    metadataBase: new URL(SITE_URL),
+    metadataBase: new URL(origin),
     title: { default: title, template: `%s · ${siteName}` },
     description,
     keywords: keywords.length ? keywords : undefined,
@@ -73,7 +73,7 @@ export async function generateMetadata(): Promise<Metadata> {
       siteName,
       title,
       description,
-      url: SITE_URL,
+      url: origin,
       locale,
       images,
     },
