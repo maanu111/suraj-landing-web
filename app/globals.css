@@ -15,6 +15,7 @@
   --charcoal: #272625;
   --indigo: #10054d;
   --title: #10054d;   /* card titles — deeper and warmer than flat ink */
+  --label: #c9350a;   /* section labels — brand orange darkened to pass AA at 12px */
 
   /* Ink ladder */
   --ink: #111111;
@@ -102,10 +103,10 @@ p { margin: 0; }
 
 .h1 { font-size: clamp(40px, 6.4vw, 92px); line-height: 0.95; letter-spacing: -0.045em; }
 .h2 {
-  font-size: clamp(32px, 4.4vw, 56px);
+  font-size: clamp(36px, 5.4vw, 72px);
   font-weight: 700;
-  line-height: 1.02;
-  letter-spacing: -0.045em;
+  line-height: 1;
+  letter-spacing: -0.05em;
   color: var(--title);
 }
 
@@ -114,11 +115,11 @@ p { margin: 0; }
 
 .eyebrow {
   font-family: var(--font-mono), monospace;
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.16em;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--ash);
+  color: var(--label);
 }
 .eyebrow b { color: var(--orange); font-weight: 500; }
 
@@ -523,7 +524,7 @@ p { margin: 0; }
   gap: 28px;
   margin-bottom: clamp(36px, 4.5vw, 60px);
 }
-.sec-head h2 { margin-top: 18px; max-width: 18ch; }
+.sec-head h2 { margin-top: 16px; max-width: 21ch; }
 .sec-head p { max-width: 38ch; }
 
 .tile {
@@ -698,8 +699,8 @@ p { margin: 0; }
    ========================================================================= */
 .dark { background: var(--charcoal); color: #fff; }
 .dark .h2 { color: #fff; }
-.dark .eyebrow { color: var(--stone); }
-.dark .sec-head p { color: var(--stone); }
+.dark .eyebrow { color: var(--mustard); }
+.dark .sec-head p:not(.eyebrow) { color: var(--stone); }
 .dark .text-link { border-color: rgba(255, 255, 255, 0.25); }
 .dark .text-link:hover { border-color: #fff; }
 
