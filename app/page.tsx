@@ -285,6 +285,15 @@ export default async function Home() {
             <Slider label="Process steps" className="steps">
               {rows(process.steps).map((step, i) => (
                 <article className="step" data-reveal key={i}>
+                  {str(step.image) ? (
+                    <figure className="step-media">
+                      <SmartImage
+                        src={str(step.image)}
+                        alt={str(step.alt)}
+                        sizes="(max-width: 820px) 82vw, 300px"
+                      />
+                    </figure>
+                  ) : null}
                   <b>{str(step.label)}</b>
                   <h3>{str(step.title)}</h3>
                   <p>{str(step.copy)}</p>
