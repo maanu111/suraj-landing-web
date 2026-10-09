@@ -16,16 +16,12 @@ type Row = { section: string; content: Record<string, unknown> };
  * No caching, on purpose. Caching is what made the deployed site serve
  * build-time content forever while local dev looked fine.
  */
-/** Last read's outcome, surfaced as an HTML comment so production can be diagnosed. */
-export let lastFetchNote = "not attempted";
-
 export async function getContent(): Promise<SiteContent> {
   const merged: SiteContent = {};
   for (const [key, value] of Object.entries(defaultContent)) merged[key] = { ...value };
 
   if (!SUPABASE_URL || !SUPABASE_KEY) {
-    lastFetchNote = `env missing: url=${Boolean(SUPABASE_URL)} key=${Boolean(SUPABASE_KEY)}`;
-    console.error("[content]", lastFetchNote);
+    console.error("[content] NEXT_PUBLIC_SUPABASE_URL / _ANON_KEY missing — serving defaults.");
     return merged;
   }
 
@@ -35,8 +31,7 @@ export async function getContent(): Promise<SiteContent> {
       cache: "no-store",
     });
     if (!response.ok) {
-      lastFetchNote = `http ${response.status} @ ${SUPABASE_URL}`;
-      console.error("[content]", lastFetchNote, (await response.text()).slice(0, 160));
+      console.error(`[content] Supabase returned ${response.status} for ${SUPABASE_URL} — serving defaults.`);
       return merged;
     }
 
@@ -44,10 +39,8 @@ export async function getContent(): Promise<SiteContent> {
     for (const row of rows) {
       if (row?.content) merged[row.section] = { ...(merged[row.section] ?? {}), ...row.content };
     }
-    lastFetchNote = `ok: ${rows.length} sections`;
   } catch (error) {
-    lastFetchNote = `threw: ${error instanceof Error ? error.message : String(error)}`;
-    console.error("[content]", lastFetchNote);
+    console.error("[content] Could not reach Supabase — serving defaults.", error);
   }
 
   return merged;
