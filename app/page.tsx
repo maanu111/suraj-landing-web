@@ -59,6 +59,11 @@ export default async function Home() {
       <VideoLightbox />
       <RealtimeContent />
 
+      {/* Scroll target for every href="#top". It must sit in normal flow —
+          the nav is position:fixed, so an id on it is always already at the
+          top of the viewport and the browser never scrolls. */}
+      <span id="top" aria-hidden="true" />
+
       <SiteNav
         wordmark={str(brand.wordmark)}
         tagline={str(brand.tagline)}

@@ -39,7 +39,7 @@ export default function SiteNav({
   }, [open]);
 
   return (
-    <header className="nav" id="top" data-nav>
+    <header className="nav" data-nav>
       <div className="shell nav-inner">
         <a className="wordmark" href="#top" aria-label={`${wordmark} home`} onClick={() => setOpen(false)}>
           <i aria-hidden="true" />
