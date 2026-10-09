@@ -1,7 +1,11 @@
 import { defaultContent, type SiteContent } from "./content";
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL ?? "";
-const SUPABASE_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "";
+// Trimmed, and trailing slashes stripped. A value stored as
+// "https://xxx.supabase.co/" builds "…co//rest/v1/…", which PostgREST
+// answers with 404 — which is exactly how this failed in production while
+// working locally.
+const SUPABASE_URL = (process.env.NEXT_PUBLIC_SUPABASE_URL ?? "").trim().replace(/\/+$/, "");
+const SUPABASE_KEY = (process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY ?? "").trim();
 
 type Row = { section: string; content: Record<string, unknown> };
 
@@ -31,7 +35,7 @@ export async function getContent(): Promise<SiteContent> {
       cache: "no-store",
     });
     if (!response.ok) {
-      lastFetchNote = `http ${response.status}`;
+      lastFetchNote = `http ${response.status} @ ${SUPABASE_URL}`;
       console.error("[content]", lastFetchNote, (await response.text()).slice(0, 160));
       return merged;
     }
