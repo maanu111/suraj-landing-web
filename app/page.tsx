@@ -1,6 +1,8 @@
 import CountUp from "./count-up";
 import MotionEnhancer from "./motion-enhancer";
 import RealtimeContent from "./realtime-content";
+import SiteNav from "./site-nav";
+import Slider from "./slider";
 import VideoLightbox from "./video-lightbox";
 import WhatsAppForm from "./whatsapp-form";
 import { getContent } from "@/lib/get-content";
@@ -57,27 +59,13 @@ export default async function Home() {
       <VideoLightbox />
       <RealtimeContent />
 
-      <header className="nav" id="top" data-nav>
-        <div className="shell nav-inner">
-          <a className="wordmark" href="#top" aria-label={`${str(brand.wordmark)} home`}>
-            <i aria-hidden="true" />
-            {str(brand.wordmark)}
-            <span>{str(brand.tagline)}</span>
-          </a>
-          <nav className="nav-links" aria-label="Main navigation">
-            {rows(brand.navLinks).map((link, i) => (
-              <a key={i} href={str(link.href) || "#"}>
-                {str(link.label)}
-              </a>
-            ))}
-          </nav>
-          <div className="nav-cta">
-            <a className="btn btn-fill" href={str(brand.ctaHref) || "#contact"}>
-              {str(brand.ctaLabel)} <i aria-hidden="true">↗</i>
-            </a>
-          </div>
-        </div>
-      </header>
+      <SiteNav
+        wordmark={str(brand.wordmark)}
+        tagline={str(brand.tagline)}
+        links={rows(brand.navLinks).map((link) => ({ label: str(link.label), href: str(link.href) }))}
+        ctaLabel={str(brand.ctaLabel)}
+        ctaHref={str(brand.ctaHref)}
+      />
 
       <main>
         {/* ----------------------------------------------------------- HERO */}
@@ -166,7 +154,7 @@ export default async function Home() {
               </div>
               <p className="muted">{str(services.note)}</p>
             </div>
-            <div className="tiles">
+            <Slider label="Services" className="tiles">
               {rows(services.items).map((item, i) => (
                 <article className="tile" data-reveal key={i}>
                   <span className="tile-num">{str(item.num)}</span>
@@ -181,7 +169,7 @@ export default async function Home() {
                   </div>
                 </article>
               ))}
-            </div>
+            </Slider>
           </div>
         </section>
 
@@ -196,7 +184,7 @@ export default async function Home() {
               <p className="muted">{str(work.note)}</p>
             </div>
 
-            <div className="rail" id="work-rail" role="region" aria-label="Selected campaigns" tabIndex={0}>
+            <Slider label="Selected campaigns" className="rail">
               {rows(work.items).map((item, i) => {
                 const video = str(item.video);
                 const href = str(item.href) || video;
@@ -241,18 +229,10 @@ export default async function Home() {
                   </article>
                 );
               })}
-            </div>
+            </Slider>
 
             <div className="rail-foot">
-              <span className="eyebrow">Drag, scroll, or use the arrows</span>
-              <div className="rail-nav">
-                <button type="button" data-rail-scroll="-1" aria-label="Previous project">
-                  ←
-                </button>
-                <button type="button" data-rail-scroll="1" aria-label="Next project">
-                  →
-                </button>
-              </div>
+              <span className="eyebrow">Drag, swipe, or use the arrows</span>
               <a className="text-link" href="#contact">
                 Make something like this <span aria-hidden="true">↗</span>
               </a>
@@ -270,7 +250,7 @@ export default async function Home() {
               </div>
               <p className="muted">{str(process.note)}</p>
             </div>
-            <div className="steps">
+            <Slider label="Process steps" className="steps">
               {rows(process.steps).map((step, i) => (
                 <article className="step" data-reveal key={i}>
                   <b>{str(step.label)}</b>
@@ -278,7 +258,7 @@ export default async function Home() {
                   <p>{str(step.copy)}</p>
                 </article>
               ))}
-            </div>
+            </Slider>
           </div>
         </section>
 
@@ -308,7 +288,7 @@ export default async function Home() {
               </div>
               <p>{str(reviews.note)}</p>
             </div>
-            <div className="quotes">
+            <Slider label="Client reviews" className="quotes" autoMs={5200}>
               {rows(reviews.items).map((review, i) => {
                 const name = str(review.name);
                 const avatar = str(review.avatar);
@@ -341,7 +321,7 @@ export default async function Home() {
                   </figure>
                 );
               })}
-            </div>
+            </Slider>
           </div>
         </section>
 
@@ -355,7 +335,7 @@ export default async function Home() {
               </div>
               <p className="muted">{str(blogs.note)}</p>
             </div>
-            <div className="posts">
+            <Slider label="Blog posts" className="posts" autoMs={5800}>
               {rows(blogs.items).map((post, i) => {
                 const image = str(post.image);
                 return (
@@ -377,7 +357,7 @@ export default async function Home() {
                   </article>
                 );
               })}
-            </div>
+            </Slider>
           </div>
         </section>
 
@@ -425,16 +405,40 @@ export default async function Home() {
       </main>
 
       <footer className="footer">
+        {/* Sign-off band — the last conversion prompt before the link grid. */}
+        <div className="shell footer-top">
+          <div>
+            <p className="footer-status">
+              <i aria-hidden="true" />
+              {str(footer.statusText)}
+            </p>
+            <h2 className="footer-cta-title">{str(footer.ctaTitle)}</h2>
+            <p className="footer-cta-body">{str(footer.ctaBody)}</p>
+          </div>
+          <a className="btn btn-mustard" href={str(footer.ctaHref) || "#contact"}>
+            {str(footer.ctaLabel)} <i aria-hidden="true">↗</i>
+          </a>
+        </div>
+
         <div className="shell">
           <div className="footer-grid">
-            <div>
+            <div className="footer-about-col">
               <a className="wordmark" href="#top">
                 <i aria-hidden="true" />
                 {str(brand.wordmark)}
                 <span>{str(brand.tagline)}</span>
               </a>
               <p className="footer-about">{str(footer.about)}</p>
+              <div className="footer-socials">
+                {rows(footer.socials).map((social, i) => (
+                  <a key={i} href={str(social.href) || "#"} target="_blank" rel="noopener noreferrer">
+                    {str(social.label)}
+                    <span aria-hidden="true">↗</span>
+                  </a>
+                ))}
+              </div>
             </div>
+
             {rows(footer.columns).map((column, i) => (
               <div key={i}>
                 <h4>{str(column.title)}</h4>
@@ -448,11 +452,21 @@ export default async function Home() {
               </div>
             ))}
           </div>
+
           <div className="footer-base">
-            <span>{str(footer.legal)}</span>
-            <span>{str(footer.note)}</span>
-            <a href="#top">Back to top ↑</a>
+            <div className="footer-legal">
+              <span>{str(footer.legal)}</span>
+              <span>{str(footer.note)}</span>
+            </div>
+            <a className="footer-top-link" href="#top">
+              Back to top <span aria-hidden="true">↑</span>
+            </a>
           </div>
+        </div>
+
+        {/* Oversized wordmark — the modern footer signature. Decorative only. */}
+        <div className="footer-mark" aria-hidden="true">
+          <span>{str(footer.bigMark) || str(brand.wordmark)}</span>
         </div>
       </footer>
 
