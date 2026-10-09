@@ -730,6 +730,9 @@ p { margin: 0; }
 .quote p { font-size: 16px; line-height: 1.55; }
 .quote footer { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
 .quote-avatar {
+  /* position + overflow so a next/image `fill` avatar clips to the circle */
+  position: relative;
+  overflow: hidden;
   display: grid;
   width: 36px;
   height: 36px;

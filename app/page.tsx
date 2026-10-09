@@ -5,6 +5,7 @@ import SiteNav from "./site-nav";
 import Slider from "./slider";
 import VideoLightbox from "./video-lightbox";
 import WhatsAppForm from "./whatsapp-form";
+import SmartImage from "./smart-image";
 import StructuredData from "./structured-data";
 import { getContent } from "@/lib/get-content";
 import { toList } from "@/lib/content";
@@ -17,7 +18,19 @@ const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string
 const AVATAR_TINTS = ["var(--petal)", "var(--mint)", "var(--canary)", "var(--violet)", "var(--aqua)"];
 
 /** Plays a clip when one is set, otherwise shows the still. */
-function Media({ video, image, alt }: { video: string; image: string; alt: string }) {
+function Media({
+  video,
+  image,
+  alt,
+  sizes,
+  priority = false,
+}: {
+  video: string;
+  image: string;
+  alt: string;
+  sizes: string;
+  priority?: boolean;
+}) {
   if (video) {
     return (
       <video
@@ -32,10 +45,7 @@ function Media({ video, image, alt }: { video: string; image: string; alt: strin
       />
     );
   }
-  // Plain <img>: admins can paste arbitrary remote URLs, which next/image rejects
-  // unless every host is allow-listed up front.
-  // eslint-disable-next-line @next/next/no-img-element
-  return <img src={image} alt={alt} loading="lazy" />;
+  return <SmartImage src={image} alt={alt} sizes={sizes} priority={priority} />;
 }
 
 export default async function Home() {
@@ -125,7 +135,13 @@ export default async function Home() {
             <div className="hero-reel">
               {rows(hero.frames).map((frame, i) => (
                 <figure className="reel-frame" key={i}>
-                  <Media video={str(frame.video)} image={str(frame.image)} alt={str(frame.alt)} />
+                  <Media
+                    video={str(frame.video)}
+                    image={str(frame.image)}
+                    alt={str(frame.alt)}
+                    sizes="(max-width: 600px) 50vw, 33vw"
+                    priority={i === 0}
+                  />
                   <span>{str(frame.caption)}</span>
                 </figure>
               ))}
@@ -166,8 +182,11 @@ export default async function Home() {
                 <article className="tile" data-reveal key={i}>
                   {str(item.image) ? (
                     <figure className="tile-media">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src={str(item.image)} alt={str(item.alt)} loading="lazy" />
+                      <SmartImage
+                        src={str(item.image)}
+                        alt={str(item.alt)}
+                        sizes="(max-width: 600px) 82vw, 350px"
+                      />
                     </figure>
                   ) : null}
                   <span className="tile-num">{str(item.num)}</span>
@@ -212,7 +231,7 @@ export default async function Home() {
                         rel="noopener noreferrer"
                         aria-label={`Open: ${str(item.title)}`}
                       >
-                        <Media video={video} image={str(item.image)} alt={str(item.alt)} />
+                        <Media video={video} image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
                         <span className="rail-chip">{str(item.chip)}</span>
                         <p className="rail-result">
                           <b>
@@ -223,7 +242,7 @@ export default async function Home() {
                       </a>
                     ) : (
                       <div className="rail-media">
-                        <Media video={video} image={str(item.image)} alt={str(item.alt)} />
+                        <Media video={video} image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
                         <span className="rail-chip">{str(item.chip)}</span>
                         <p className="rail-result">
                           <b>
@@ -315,8 +334,7 @@ export default async function Home() {
                     </blockquote>
                     <footer>
                       {avatar ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img className="quote-avatar" src={avatar} alt="" loading="lazy" />
+                        <SmartImage className="quote-avatar" src={avatar} alt="" sizes="36px" />
                       ) : (
                         <span
                           className="quote-avatar"
@@ -354,10 +372,7 @@ export default async function Home() {
                 return (
                   <article className="post" data-reveal key={i}>
                     <a className="post-art" href={str(post.href) || "#blogs"} aria-label={`Read: ${str(post.title)}`}>
-                      {image ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={image} alt="" loading="lazy" />
-                      ) : null}
+                      {image ? <SmartImage src={image} alt="" sizes="(max-width: 600px) 82vw, 372px" /> : null}
                       <b>{str(post.art)}</b>
                       <i>{str(post.kicker)}</i>
                     </a>
