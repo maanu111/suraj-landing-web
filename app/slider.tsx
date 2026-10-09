@@ -67,7 +67,7 @@ export default function Slider({
       return;
     }
 
-    const duration = 480;
+    const duration = 620;
     let startedAt = 0;
     let ticked = false;
 
@@ -75,7 +75,8 @@ export default function Slider({
       ticked = true;
       if (!startedAt) startedAt = now;
       const progress = Math.min(1, (now - startedAt) / duration);
-      const eased = 1 - Math.pow(1 - progress, 3);
+      // easeInOutCubic: no hard kick at the start, settles instead of stopping dead
+      const eased = progress < 0.5 ? 4 * progress ** 3 : 1 - Math.pow(-2 * progress + 2, 3) / 2;
       track.scrollLeft = from + distance * eased;
       if (progress < 1) animation.current = requestAnimationFrame(tick);
       else syncEdges();

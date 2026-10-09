@@ -125,37 +125,18 @@ export default async function Home() {
             {/* Mosaic: one wide tile, two stacked, one tall, two stacked. */}
             <div className="mosaic">
               {rows(hero.tiles).map((tile, i) => {
-                const video = str(tile.video);
-                const Tag = video ? "a" : "div";
                 return (
-                  <Tag
-                    className="mosaic-tile"
-                    key={i}
-                    {...(video
-                      ? {
-                          href: video,
-                          "data-video": video,
-                          target: "_blank",
-                          rel: "noopener noreferrer",
-                          "aria-label": `Play: ${str(tile.title)}`,
-                        }
-                      : {})}
-                  >
+                  <div className="mosaic-tile" key={i}>
                     <SmartImage
                       src={str(tile.image)}
                       alt={str(tile.alt)}
                       sizes="(max-width: 760px) 50vw, 25vw"
                     />
-                    {i === 0 && video ? (
-                      <em className="mosaic-play" aria-hidden="true">
-                        ▶
-                      </em>
-                    ) : null}
                     <p className="mosaic-caption">
                       <b>{str(tile.title)}</b>
                       {str(tile.category) ? <span> | {str(tile.category)}</span> : null}
                     </p>
-                  </Tag>
+                  </div>
                 );
               })}
             </div>
