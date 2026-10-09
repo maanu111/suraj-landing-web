@@ -115,9 +115,12 @@ p { margin: 0; }
 
 .eyebrow {
   font-family: var(--font-mono), monospace;
-  font-size: 13px;
+  /* Scales with the viewport like the heading above it, instead of sitting at
+     a fixed size that shrinks away next to 72px type. */
+  font-size: clamp(14px, 1.25vw, 18px);
   font-weight: 700;
-  letter-spacing: 0.18em;
+  /* Tracking eases off as the size grows, or the label sprawls across the row. */
+  letter-spacing: 0.13em;
   text-transform: uppercase;
   color: var(--label);
 }
@@ -524,7 +527,7 @@ p { margin: 0; }
   gap: 28px;
   margin-bottom: clamp(36px, 4.5vw, 60px);
 }
-.sec-head h2 { margin-top: 16px; max-width: 21ch; }
+.sec-head h2 { margin-top: 14px; max-width: 21ch; }
 .sec-head p { max-width: 38ch; }
 
 .tile {
