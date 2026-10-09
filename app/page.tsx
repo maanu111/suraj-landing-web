@@ -164,6 +164,12 @@ export default async function Home() {
             <Slider label="Services" className="tiles">
               {rows(services.items).map((item, i) => (
                 <article className="tile" data-reveal key={i}>
+                  {str(item.image) ? (
+                    <figure className="tile-media">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={str(item.image)} alt={str(item.alt)} loading="lazy" />
+                    </figure>
+                  ) : null}
                   <span className="tile-num">{str(item.num)}</span>
                   <div>
                     <h3>{str(item.title)}</h3>
