@@ -14,12 +14,15 @@ export default function SiteNav({
   links,
   ctaLabel,
   ctaHref,
+  overDark = false,
 }: {
   wordmark: string;
   tagline: string;
   links: Link[];
   ctaLabel: string;
   ctaHref: string;
+  /** True on pages whose first section is the dark hero. */
+  overDark?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -39,7 +42,7 @@ export default function SiteNav({
   }, [open]);
 
   return (
-    <header className="nav" data-nav>
+    <header className="nav" data-nav data-over-dark={overDark || undefined}>
       <div className="shell nav-inner">
         <a className="wordmark" href="#top" aria-label={`${wordmark} home`} onClick={() => setOpen(false)}>
           <i aria-hidden="true" />

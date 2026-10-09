@@ -83,69 +83,87 @@ export default async function Home() {
         links={rows(brand.navLinks).map((link) => ({ label: str(link.label), href: str(link.href) }))}
         ctaLabel={str(brand.ctaLabel)}
         ctaHref={str(brand.ctaHref)}
+        overDark
       />
 
       <main>
         {/* ----------------------------------------------------------- HERO */}
-        <section className="hero">
-          <div className="hero-wash" aria-hidden="true" />
-          <div className="hero-grain" aria-hidden="true" />
-          <div className="shell hero-inner">
-            <p className="hero-badge">
-              <b>{str(hero.badgeLabel)}</b> {str(hero.badgeText)}
-            </p>
+        <section className="hero-dark">
+          {str(hero.bgImage) ? (
+            <div className="hero-dark-bg" aria-hidden="true">
+              <SmartImage src={str(hero.bgImage)} alt="" sizes="100vw" priority />
+            </div>
+          ) : null}
+          <div className="hero-dark-veil" aria-hidden="true" />
 
-            <h1 className="display">
+          <div className="shell hero-dark-inner">
+            <h1 className="hero-dark-title">
               <span className="line-mask">
                 <span>{str(hero.line1)}</span>
               </span>
               <span className="line-mask">
                 <span>{str(hero.line2)}</span>
               </span>
-              <span className="line-mask">
-                <span>
-                  <em>{str(hero.line3)}</em>
-                </span>
-              </span>
             </h1>
 
-            <div className="hero-foot">
-              <div>
-                <p className="lead">{str(hero.lead)}</p>
-                <div className="hero-actions">
-                  <a className="btn btn-fill" href={str(hero.primaryHref) || "#contact"}>
-                    {str(hero.primaryLabel)} <i aria-hidden="true">↗</i>
-                  </a>
-                  <a className="btn btn-ghost" href={str(hero.secondaryHref) || "#work"}>
-                    {str(hero.secondaryLabel)}
-                  </a>
-                </div>
-              </div>
-              <div className="hero-stats">
-                {rows(hero.stats).map((stat, i) => (
-                  <div key={i}>
-                    <b>
-                      <CountUp value={str(stat.value)} />
-                    </b>
-                    <span>{str(stat.label)}</span>
-                  </div>
-                ))}
-              </div>
+            <p className="hero-dark-sub">
+              {str(hero.sub1)}
+              <br />
+              {str(hero.sub2)}
+            </p>
+
+            <div className="hero-dark-actions">
+              <a className="btn btn-gold" href={str(hero.primaryHref) || "/#work"}>
+                {str(hero.primaryLabel)} <i aria-hidden="true">▶</i>
+              </a>
+              <a className="btn btn-outline" href={str(hero.secondaryHref) || "/#work"}>
+                {str(hero.secondaryLabel)}
+              </a>
             </div>
 
-            <div className="hero-reel">
-              {rows(hero.frames).map((frame, i) => (
-                <figure className="reel-frame" key={i}>
-                  <Media
-                    video={str(frame.video)}
-                    image={str(frame.image)}
-                    alt={str(frame.alt)}
-                    sizes="(max-width: 600px) 50vw, 33vw"
-                    priority={i === 0}
-                  />
-                  <span>{str(frame.caption)}</span>
-                </figure>
-              ))}
+            {/* Mosaic: one wide tile, two stacked, one tall, two stacked. */}
+            <div className="mosaic">
+              {rows(hero.tiles).map((tile, i) => {
+                const video = str(tile.video);
+                const Tag = video ? "a" : "div";
+                return (
+                  <Tag
+                    className="mosaic-tile"
+                    key={i}
+                    {...(video
+                      ? {
+                          href: video,
+                          "data-video": video,
+                          target: "_blank",
+                          rel: "noopener noreferrer",
+                          "aria-label": `Play: ${str(tile.title)}`,
+                        }
+                      : {})}
+                  >
+                    <SmartImage
+                      src={str(tile.image)}
+                      alt={str(tile.alt)}
+                      sizes="(max-width: 760px) 50vw, 25vw"
+                    />
+                    {i === 0 && video ? (
+                      <em className="mosaic-play" aria-hidden="true">
+                        ▶
+                      </em>
+                    ) : null}
+                    <p className="mosaic-caption">
+                      <b>{str(tile.title)}</b>
+                      {str(tile.category) ? <span> | {str(tile.category)}</span> : null}
+                    </p>
+                  </Tag>
+                );
+              })}
+            </div>
+
+            <div className="hero-dark-foot">
+              <h2 className="hero-dark-recent">{str(hero.recentHeading)}</h2>
+              <a className="btn btn-outline" href={str(hero.recentHref) || "/#work"}>
+                {str(hero.recentLabel)}
+              </a>
             </div>
           </div>
         </section>

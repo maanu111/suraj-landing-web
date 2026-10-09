@@ -12,9 +12,6 @@ import { absoluteUrl, getSeo, seoStr } from "@/lib/seo";
 const str = (value: unknown) => (typeof value === "string" ? value : "");
 const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string, unknown>[]) : []);
 
-/** Avatar tints cycle when a member has no photo. */
-const TINTS = ["var(--petal)", "var(--mint)", "var(--canary)", "var(--violet)", "var(--aqua)"];
-
 export async function generateMetadata(): Promise<Metadata> {
   const { seo, origin, content } = await getSeo();
   const about = content.about ?? {};
@@ -42,7 +39,6 @@ export default async function AboutPage() {
   const c = await getContent();
   const brand = c.brand ?? {};
   const about = c.about ?? {};
-  const team = c.team ?? {};
   const footer = c.footer ?? {};
   const cta = c.cta ?? {};
 
@@ -138,46 +134,6 @@ export default async function AboutPage() {
                   <p>{str(value.copy)}</p>
                 </article>
               ))}
-            </Slider>
-          </div>
-        </section>
-
-        {/* -------------------------------------------------------- TEAM */}
-        <section className="section team" id="team">
-          <div className="shell">
-            <div className="sec-head">
-              <div>
-                <p className="eyebrow">{str(team.eyebrow)}</p>
-                <h2 className="h2">{str(team.heading)}</h2>
-              </div>
-              <p className="muted">{str(team.note)}</p>
-            </div>
-
-            <Slider label="Team members" className="team-rail" autoMs={5200}>
-              {rows(team.members).map((member, i) => {
-                const name = str(member.name);
-                const photo = str(member.image);
-                const href = str(member.linkHref);
-                return (
-                  <article className="member" data-reveal key={i}>
-                    <div className="member-photo" style={photo ? undefined : { background: TINTS[i % TINTS.length] }}>
-                      {photo ? (
-                        <SmartImage src={photo} alt={str(member.alt) || name} sizes="(max-width: 600px) 72vw, 290px" />
-                      ) : (
-                        <span aria-hidden="true">{name.charAt(0)}</span>
-                      )}
-                    </div>
-                    <h3>{name}</h3>
-                    <p className="member-role">{str(member.role)}</p>
-                    <p className="member-bio">{str(member.bio)}</p>
-                    {href ? (
-                      <a className="member-link" href={href} target="_blank" rel="noopener noreferrer">
-                        {str(member.linkLabel) || "Profile"} <span aria-hidden="true">↗</span>
-                      </a>
-                    ) : null}
-                  </article>
-                );
-              })}
             </Slider>
           </div>
         </section>
