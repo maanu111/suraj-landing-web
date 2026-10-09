@@ -1,69 +1,467 @@
-import Image from "next/image";
+import CountUp from "./count-up";
+import MotionEnhancer from "./motion-enhancer";
+import RealtimeContent from "./realtime-content";
+import VideoLightbox from "./video-lightbox";
+import WhatsAppForm from "./whatsapp-form";
+import { getContent } from "@/lib/get-content";
+import { toList } from "@/lib/content";
 
-export default function Home() {
+/* Content arrives from Supabase as JSON, so every read is coerced rather than
+   trusted — a half-filled admin row must never crash the marketing site. */
+const str = (value: unknown) => (typeof value === "string" ? value : "");
+const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string, unknown>[]) : []);
+
+const AVATAR_TINTS = ["var(--petal)", "var(--mint)", "var(--canary)", "var(--violet)", "var(--aqua)"];
+
+/** Plays a clip when one is set, otherwise shows the still. */
+function Media({ video, image, alt }: { video: string; image: string; alt: string }) {
+  if (video) {
+    return (
+      <video
+        src={video}
+        poster={image || undefined}
+        autoPlay
+        muted
+        loop
+        playsInline
+        preload="metadata"
+        aria-label={alt}
+      />
+    );
+  }
+  // Plain <img>: admins can paste arbitrary remote URLs, which next/image rejects
+  // unless every host is allow-listed up front.
+  // eslint-disable-next-line @next/next/no-img-element
+  return <img src={image} alt={alt} loading="lazy" />;
+}
+
+export default async function Home() {
+  const c = await getContent();
+  const brand = c.brand ?? {};
+  const hero = c.hero ?? {};
+  const services = c.services ?? {};
+  const work = c.work ?? {};
+  const process = c.process ?? {};
+  const numbers = c.numbers ?? {};
+  const reviews = c.reviews ?? {};
+  const blogs = c.blogs ?? {};
+  const contact = c.contact ?? {};
+  const cta = c.cta ?? {};
+  const footer = c.footer ?? {};
+
+  const marqueeItems = rows(c.marquee?.items);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <>
+      <MotionEnhancer />
+      <VideoLightbox />
+      <RealtimeContent />
+
+      <header className="nav" id="top" data-nav>
+        <div className="shell nav-inner">
+          <a className="wordmark" href="#top" aria-label={`${str(brand.wordmark)} home`}>
+            <i aria-hidden="true" />
+            {str(brand.wordmark)}
+            <span>{str(brand.tagline)}</span>
+          </a>
+          <nav className="nav-links" aria-label="Main navigation">
+            {rows(brand.navLinks).map((link, i) => (
+              <a key={i} href={str(link.href) || "#"}>
+                {str(link.label)}
+              </a>
+            ))}
+          </nav>
+          <div className="nav-cta">
+            <a className="btn btn-fill" href={str(brand.ctaHref) || "#contact"}>
+              {str(brand.ctaLabel)} <i aria-hidden="true">↗</i>
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
+      </header>
+
+      <main>
+        {/* ----------------------------------------------------------- HERO */}
+        <section className="hero">
+          <div className="hero-wash" aria-hidden="true" />
+          <div className="hero-grain" aria-hidden="true" />
+          <div className="shell hero-inner">
+            <p className="hero-badge">
+              <b>{str(hero.badgeLabel)}</b> {str(hero.badgeText)}
+            </p>
+
+            <h1 className="display">
+              <span className="line-mask">
+                <span>{str(hero.line1)}</span>
+              </span>
+              <span className="line-mask">
+                <span>{str(hero.line2)}</span>
+              </span>
+              <span className="line-mask">
+                <span>
+                  <em>{str(hero.line3)}</em>
+                </span>
+              </span>
+            </h1>
+
+            <div className="hero-foot">
+              <div>
+                <p className="lead">{str(hero.lead)}</p>
+                <div className="hero-actions">
+                  <a className="btn btn-fill" href={str(hero.primaryHref) || "#contact"}>
+                    {str(hero.primaryLabel)} <i aria-hidden="true">↗</i>
+                  </a>
+                  <a className="btn btn-ghost" href={str(hero.secondaryHref) || "#work"}>
+                    {str(hero.secondaryLabel)}
+                  </a>
+                </div>
+              </div>
+              <div className="hero-stats">
+                {rows(hero.stats).map((stat, i) => (
+                  <div key={i}>
+                    <b>
+                      <CountUp value={str(stat.value)} />
+                    </b>
+                    <span>{str(stat.label)}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="hero-reel">
+              {rows(hero.frames).map((frame, i) => (
+                <figure className="reel-frame" key={i}>
+                  <Media video={str(frame.video)} image={str(frame.image)} alt={str(frame.alt)} />
+                  <span>{str(frame.caption)}</span>
+                </figure>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------------- MARQUEE */}
+        {marqueeItems.length ? (
+          <div className="marquee" aria-label="Capabilities">
+            <div className="marquee-track" aria-hidden="true">
+              {[0, 1].map((group) => (
+                <div className="marquee-group" key={group}>
+                  {marqueeItems.map((item, i) => (
+                    <span key={i} style={{ display: "contents" }}>
+                      <b>{str(item.text)}</b>
+                      <i>·</i>
+                    </span>
+                  ))}
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : null}
+
+        {/* ------------------------------------------------------- SERVICES */}
+        <section className="section" id="services">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(services.eyebrow)}</p>
+                <h2 className="h2">{str(services.heading)}</h2>
+              </div>
+              <p className="muted">{str(services.note)}</p>
+            </div>
+            <div className="tiles">
+              {rows(services.items).map((item, i) => (
+                <article className="tile" data-reveal key={i}>
+                  <span className="tile-num">{str(item.num)}</span>
+                  <div>
+                    <h3>{str(item.title)}</h3>
+                    <p>{str(item.copy)}</p>
+                    <div className="tile-tags">
+                      {toList(item.tags).map((tag) => (
+                        <span key={tag}>{tag}</span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* ----------------------------------------------------------- WORK */}
+        <section className="section work" id="work">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(work.eyebrow)}</p>
+                <h2 className="h2">{str(work.heading)}</h2>
+              </div>
+              <p className="muted">{str(work.note)}</p>
+            </div>
+
+            <div className="rail" id="work-rail" role="region" aria-label="Selected campaigns" tabIndex={0}>
+              {rows(work.items).map((item, i) => {
+                const video = str(item.video);
+                const href = str(item.href) || video;
+                return (
+                  <article className="rail-card" data-reveal key={i}>
+                    {href ? (
+                      <a
+                        className="rail-media"
+                        href={href}
+                        data-video={video || undefined}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        aria-label={`Open: ${str(item.title)}`}
+                      >
+                        <Media video={video} image={str(item.image)} alt={str(item.alt)} />
+                        <span className="rail-chip">{str(item.chip)}</span>
+                        <p className="rail-result">
+                          <b>
+                            <CountUp value={str(item.metric)} />
+                          </b>
+                          {str(item.metricLabel)}
+                        </p>
+                      </a>
+                    ) : (
+                      <div className="rail-media">
+                        <Media video={video} image={str(item.image)} alt={str(item.alt)} />
+                        <span className="rail-chip">{str(item.chip)}</span>
+                        <p className="rail-result">
+                          <b>
+                            <CountUp value={str(item.metric)} />
+                          </b>
+                          {str(item.metricLabel)}
+                        </p>
+                      </div>
+                    )}
+                    <div className="rail-meta">
+                      <span>{str(item.client)}</span>
+                      <span>{str(item.year)}</span>
+                    </div>
+                    <h3>{str(item.title)}</h3>
+                    <p className="rail-copy">{str(item.copy)}</p>
+                  </article>
+                );
+              })}
+            </div>
+
+            <div className="rail-foot">
+              <span className="eyebrow">Drag, scroll, or use the arrows</span>
+              <div className="rail-nav">
+                <button type="button" data-rail-scroll="-1" aria-label="Previous project">
+                  ←
+                </button>
+                <button type="button" data-rail-scroll="1" aria-label="Next project">
+                  →
+                </button>
+              </div>
+              <a className="text-link" href="#contact">
+                Make something like this <span aria-hidden="true">↗</span>
+              </a>
+            </div>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------------- PROCESS */}
+        <section className="section process" id="process">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(process.eyebrow)}</p>
+                <h2 className="h2">{str(process.heading)}</h2>
+              </div>
+              <p className="muted">{str(process.note)}</p>
+            </div>
+            <div className="steps">
+              {rows(process.steps).map((step, i) => (
+                <article className="step" data-reveal key={i}>
+                  <b>{str(step.label)}</b>
+                  <h3>{str(step.title)}</h3>
+                  <p>{str(step.copy)}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------------- NUMBERS */}
+        <section className="section dark">
+          <div className="shell">
+            <div className="numbers">
+              {rows(numbers.items).map((item, i) => (
+                <div data-reveal key={i}>
+                  <b>
+                    <CountUp value={str(item.value)} />
+                  </b>
+                  <span>{str(item.label)}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------------- REVIEWS */}
+        <section className="section dark" id="reviews">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(reviews.eyebrow)}</p>
+                <h2 className="h2">{str(reviews.heading)}</h2>
+              </div>
+              <p>{str(reviews.note)}</p>
+            </div>
+            <div className="quotes">
+              {rows(reviews.items).map((review, i) => {
+                const name = str(review.name);
+                const avatar = str(review.avatar);
+                return (
+                  <figure className="quote" key={i}>
+                    <div className="quote-stars" aria-label="Rated 5 out of 5">
+                      ★★★★★
+                    </div>
+                    <blockquote>
+                      <p>&ldquo;{str(review.quote)}&rdquo;</p>
+                    </blockquote>
+                    <footer>
+                      {avatar ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img className="quote-avatar" src={avatar} alt="" loading="lazy" />
+                      ) : (
+                        <span
+                          className="quote-avatar"
+                          style={{ background: AVATAR_TINTS[i % AVATAR_TINTS.length] }}
+                          aria-hidden="true"
+                        >
+                          {name.charAt(0)}
+                        </span>
+                      )}
+                      <div>
+                        <b>{name}</b>
+                        <cite>{str(review.role)}</cite>
+                      </div>
+                    </footer>
+                  </figure>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* ---------------------------------------------------------- BLOGS */}
+        <section className="section" id="blogs">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(blogs.eyebrow)}</p>
+                <h2 className="h2">{str(blogs.heading)}</h2>
+              </div>
+              <p className="muted">{str(blogs.note)}</p>
+            </div>
+            <div className="posts">
+              {rows(blogs.items).map((post, i) => {
+                const image = str(post.image);
+                return (
+                  <article className="post" data-reveal key={i}>
+                    <a className="post-art" href={str(post.href) || "#blogs"} aria-label={`Read: ${str(post.title)}`}>
+                      {image ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img src={image} alt="" loading="lazy" />
+                      ) : null}
+                      <b>{str(post.art)}</b>
+                      <i>{str(post.kicker)}</i>
+                    </a>
+                    <div className="post-meta">
+                      <span>{str(post.category)}</span>
+                      <span>{str(post.read)}</span>
+                    </div>
+                    <h3>{str(post.title)}</h3>
+                    <p>{str(post.copy)}</p>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
+        </section>
+
+        {/* -------------------------------------------------------- CONTACT */}
+        <section className="section contact" id="contact">
+          <div className="shell contact-grid">
+            <div className="contact-copy" data-reveal="left">
+              <p className="eyebrow">{str(contact.eyebrow)}</p>
+              <h2 className="h2">{str(contact.heading)}</h2>
+              <p className="lead muted">{str(contact.lead)}</p>
+              <ul className="contact-points">
+                {rows(contact.points).map((point, i) => (
+                  <li key={i}>
+                    <i aria-hidden="true">✓</i> {str(point.text)}
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <WhatsAppForm
+              services={toList(contact.services)}
+              budgets={toList(contact.budgets)}
+              whatsapp={str(contact.whatsapp)}
+              brand={str(brand.wordmark)}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+          </div>
+        </section>
+
+        {/* ------------------------------------------------------- CTA BAND */}
+        <section className="section cta-band">
+          <div className="shell">
+            <h2 className="display">
+              {str(cta.heading)} <em>{str(cta.headingAccent)}</em>
+            </h2>
+            <p>{str(cta.body)}</p>
+            <div className="cta-actions">
+              <a className="btn btn-mustard" href={str(cta.primaryHref) || "#contact"}>
+                {str(cta.primaryLabel)} <i aria-hidden="true">↗</i>
+              </a>
+              <a className="btn btn-ghost" href={str(cta.secondaryHref) || "#work"}>
+                {str(cta.secondaryLabel)}
+              </a>
+            </div>
+          </div>
+        </section>
       </main>
-    </div>
+
+      <footer className="footer">
+        <div className="shell">
+          <div className="footer-grid">
+            <div>
+              <a className="wordmark" href="#top">
+                <i aria-hidden="true" />
+                {str(brand.wordmark)}
+                <span>{str(brand.tagline)}</span>
+              </a>
+              <p className="footer-about">{str(footer.about)}</p>
+            </div>
+            {rows(footer.columns).map((column, i) => (
+              <div key={i}>
+                <h4>{str(column.title)}</h4>
+                <ul>
+                  {rows(column.links).map((link, j) => (
+                    <li key={j}>
+                      <a href={str(link.href) || "#"}>{str(link.label)}</a>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+          <div className="footer-base">
+            <span>{str(footer.legal)}</span>
+            <span>{str(footer.note)}</span>
+            <a href="#top">Back to top ↑</a>
+          </div>
+        </div>
+      </footer>
+
+      <a className="wa-float" href="#contact" aria-label="Enquire on WhatsApp">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+          <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.46 1.32 4.96L2 22l5.25-1.38a9.87 9.87 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 18.13a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.36c0-4.54 3.7-8.23 8.24-8.23 2.2 0 4.27.86 5.83 2.41a8.19 8.19 0 0 1 2.41 5.83c0 4.54-3.7 8.21-8.24 8.21Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.17.24-.64.8-.79.97-.14.16-.29.19-.54.06-.25-.12-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.43.13-.15.17-.25.25-.41.09-.17.04-.31-.02-.44-.06-.12-.56-1.34-.76-1.84-.2-.48-.41-.42-.56-.43h-.48c-.17 0-.44.06-.67.31-.23.25-.87.86-.87 2.07 0 1.22.89 2.4 1.02 2.56.12.17 1.75 2.67 4.23 3.74.59.26 1.05.41 1.41.52.59.19 1.13.16 1.56.1.47-.07 1.47-.6 1.67-1.18.21-.58.21-1.07.15-1.18-.06-.1-.23-.16-.48-.29Z" />
+        </svg>
+        <span>{str(brand.whatsappLabel) || "WhatsApp us"}</span>
+      </a>
+    </>
   );
 }
