@@ -5,6 +5,7 @@ import SiteNav from "./site-nav";
 import Slider from "./slider";
 import VideoLightbox from "./video-lightbox";
 import WhatsAppForm from "./whatsapp-form";
+import StructuredData from "./structured-data";
 import { getContent } from "@/lib/get-content";
 import { toList } from "@/lib/content";
 
@@ -58,6 +59,7 @@ export default async function Home() {
       <MotionEnhancer />
       <VideoLightbox />
       <RealtimeContent />
+      <StructuredData />
 
       {/* Scroll target for every href="#top". It must sit in normal flow —
           the nav is position:fixed, so an id on it is always already at the
