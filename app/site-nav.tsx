@@ -15,6 +15,7 @@ export default function SiteNav({
   ctaLabel,
   ctaHref,
   overDark = false,
+  isHome = false,
 }: {
   wordmark: string;
   tagline: string;
@@ -23,6 +24,8 @@ export default function SiteNav({
   ctaHref: string;
   /** True on pages whose first section is the dark hero. */
   overDark?: boolean;
+  /** On the home page the logo scrolls to the top; elsewhere it navigates home. */
+  isHome?: boolean;
 }) {
   const [open, setOpen] = useState(false);
 
@@ -44,7 +47,12 @@ export default function SiteNav({
   return (
     <header className="nav" data-nav data-over-dark={overDark || undefined}>
       <div className="shell nav-inner">
-        <a className="wordmark" href="#top" aria-label={`${wordmark} home`} onClick={() => setOpen(false)}>
+        <a
+          className="wordmark"
+          href={isHome ? "#top" : "/"}
+          aria-label={`${wordmark} — back to the home page`}
+          onClick={() => setOpen(false)}
+        >
           <i aria-hidden="true" />
           {wordmark}
           <span>{tagline}</span>

@@ -84,6 +84,7 @@ export default async function Home() {
         ctaLabel={str(brand.ctaLabel)}
         ctaHref={str(brand.ctaHref)}
         overDark
+        isHome
       />
 
       <main>
