@@ -28,11 +28,12 @@ export default function WhatsAppForm({ services, budgets, whatsapp, brand }: Pro
       return;
     }
 
-    // Admin value wins; the env var stays as a fallback.
-    const number = (whatsapp || process.env.NEXT_PUBLIC_WHATSAPP_NUMBER || "").replace(/\D/g, "");
+    // The number comes from the admin only — there is deliberately no env
+    // fallback, so there is a single place to change it.
+    const number = whatsapp.replace(/\D/g, "");
     if (!number) {
       setTone("error");
-      setStatus("WhatsApp isn’t connected yet — add a number under Enquiry form in /admin.");
+      setStatus("WhatsApp isn’t connected yet — add the number under Enquiry form in the admin panel.");
       return;
     }
 
