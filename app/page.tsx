@@ -7,7 +7,7 @@ import Slider from "./slider";
 import WhatsAppForm from "./whatsapp-form";
 import SmartImage from "./smart-image";
 import StructuredData from "./structured-data";
-import { getContent } from "@/lib/get-content";
+import { getContent, lastFetchNote } from "@/lib/get-content";
 import { toList } from "@/lib/content";
 
 /* Content arrives from Supabase as JSON, so every read is coerced rather than
@@ -50,6 +50,7 @@ export default async function Home() {
 
   return (
     <>
+      <div data-content-source={lastFetchNote} hidden />
       <MotionEnhancer />
       <RealtimeContent />
       <StructuredData />

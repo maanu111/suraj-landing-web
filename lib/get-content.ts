@@ -12,24 +12,38 @@ type Row = { section: string; content: Record<string, unknown> };
  * No caching, on purpose. Caching is what made the deployed site serve
  * build-time content forever while local dev looked fine.
  */
+/** Last read's outcome, surfaced as an HTML comment so production can be diagnosed. */
+export let lastFetchNote = "not attempted";
+
 export async function getContent(): Promise<SiteContent> {
   const merged: SiteContent = {};
   for (const [key, value] of Object.entries(defaultContent)) merged[key] = { ...value };
 
-  if (!SUPABASE_URL || !SUPABASE_KEY) return merged;
+  if (!SUPABASE_URL || !SUPABASE_KEY) {
+    lastFetchNote = `env missing: url=${Boolean(SUPABASE_URL)} key=${Boolean(SUPABASE_KEY)}`;
+    console.error("[content]", lastFetchNote);
+    return merged;
+  }
 
   try {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/site_content?select=section,content`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
       cache: "no-store",
     });
-    if (!response.ok) return merged;
+    if (!response.ok) {
+      lastFetchNote = `http ${response.status}`;
+      console.error("[content]", lastFetchNote, (await response.text()).slice(0, 160));
+      return merged;
+    }
 
-    for (const row of (await response.json()) as Row[]) {
+    const rows = (await response.json()) as Row[];
+    for (const row of rows) {
       if (row?.content) merged[row.section] = { ...(merged[row.section] ?? {}), ...row.content };
     }
-  } catch {
-    // Database unreachable — render the bundled defaults rather than nothing.
+    lastFetchNote = `ok: ${rows.length} sections`;
+  } catch (error) {
+    lastFetchNote = `threw: ${error instanceof Error ? error.message : String(error)}`;
+    console.error("[content]", lastFetchNote);
   }
 
   return merged;
