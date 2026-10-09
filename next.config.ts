@@ -2,8 +2,9 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   /* config options here */
-  cacheComponents: true,
-  partialPrefetching: true,
+  // cacheComponents was removed deliberately. It is what froze the deployed
+  // content: pages were fully prerendered at build time and the data was
+  // never re-read. Standard ISR is predictable and builds reliably.
   // Hides the floating Next.js dev indicator in the corner.
   devIndicators: false,
   images: {

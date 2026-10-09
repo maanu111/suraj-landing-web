@@ -39,6 +39,9 @@ export async function getContent(): Promise<SiteContent> {
     const response = await fetch(`${SUPABASE_URL}/rest/v1/site_content?select=section,content`, {
       headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
       next: { revalidate: 60, tags: [CONTENT_TAG] },
+      // A hung request must never stall a prerender. Defaults render instead
+      // and the next revalidation picks the real content up a minute later.
+      signal: AbortSignal.timeout(8000),
     });
 
     if (!response.ok) {
