@@ -4,7 +4,6 @@ import RealtimeContent from "./realtime-content";
 import SiteFooter from "./site-footer";
 import SiteNav from "./site-nav";
 import Slider from "./slider";
-import VideoLightbox from "./video-lightbox";
 import WhatsAppForm from "./whatsapp-form";
 import SmartImage from "./smart-image";
 import StructuredData from "./structured-data";
@@ -18,34 +17,18 @@ const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string
 
 const AVATAR_TINTS = ["var(--petal)", "var(--mint)", "var(--canary)", "var(--violet)", "var(--aqua)"];
 
-/** Plays a clip when one is set, otherwise shows the still. */
+/** Section imagery. */
 function Media({
-  video,
   image,
   alt,
   sizes,
   priority = false,
 }: {
-  video: string;
   image: string;
   alt: string;
   sizes: string;
   priority?: boolean;
 }) {
-  if (video) {
-    return (
-      <video
-        src={video}
-        poster={image || undefined}
-        autoPlay
-        muted
-        loop
-        playsInline
-        preload="metadata"
-        aria-label={alt}
-      />
-    );
-  }
   return <SmartImage src={image} alt={alt} sizes={sizes} priority={priority} />;
 }
 
@@ -68,7 +51,6 @@ export default async function Home() {
   return (
     <>
       <MotionEnhancer />
-      <VideoLightbox />
       <RealtimeContent />
       <StructuredData />
 
@@ -124,21 +106,19 @@ export default async function Home() {
 
             {/* Mosaic: one wide tile, two stacked, one tall, two stacked. */}
             <div className="mosaic">
-              {rows(hero.tiles).map((tile, i) => {
-                return (
-                  <div className="mosaic-tile" key={i}>
-                    <SmartImage
-                      src={str(tile.image)}
-                      alt={str(tile.alt)}
-                      sizes="(max-width: 760px) 50vw, 25vw"
-                    />
-                    <p className="mosaic-caption">
-                      <b>{str(tile.title)}</b>
-                      {str(tile.category) ? <span> | {str(tile.category)}</span> : null}
-                    </p>
-                  </div>
-                );
-              })}
+              {rows(hero.tiles).map((tile, i) => (
+                <div className="mosaic-tile" key={i}>
+                  <SmartImage
+                    src={str(tile.image)}
+                    alt={str(tile.alt)}
+                    sizes="(max-width: 760px) 50vw, 25vw"
+                  />
+                  <p className="mosaic-caption">
+                    <b>{str(tile.title)}</b>
+                    {str(tile.category) ? <span> | {str(tile.category)}</span> : null}
+                  </p>
+                </div>
+              ))}
             </div>
 
             <div className="hero-dark-foot">
@@ -219,20 +199,18 @@ export default async function Home() {
 
             <Slider label="Selected campaigns" className="rail">
               {rows(work.items).map((item, i) => {
-                const video = str(item.video);
-                const href = str(item.href) || video;
+                const href = str(item.href);
                 return (
                   <article className="rail-card" data-reveal key={i}>
                     {href ? (
                       <a
                         className="rail-media"
                         href={href}
-                        data-video={video || undefined}
                         target="_blank"
                         rel="noopener noreferrer"
                         aria-label={`Open: ${str(item.title)}`}
                       >
-                        <Media video={video} image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
+                        <Media image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
                         <span className="rail-chip">{str(item.chip)}</span>
                         <p className="rail-result">
                           <b>
@@ -243,7 +221,7 @@ export default async function Home() {
                       </a>
                     ) : (
                       <div className="rail-media">
-                        <Media video={video} image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
+                        <Media image={str(item.image)} alt={str(item.alt)} sizes="(max-width: 600px) 82vw, 440px" />
                         <span className="rail-chip">{str(item.chip)}</span>
                         <p className="rail-result">
                           <b>
