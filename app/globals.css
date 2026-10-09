@@ -14,6 +14,7 @@
   --pearl: #ecebea;
   --charcoal: #272625;
   --indigo: #10054d;
+  --title: #10054d;   /* card titles — deeper and warmer than flat ink */
 
   /* Ink ladder */
   --ink: #111111;
@@ -540,7 +541,14 @@ p { margin: 0; }
   letter-spacing: 0.12em;
   color: rgba(17, 17, 17, 0.5);
 }
-.tile h3 { margin-top: 36px; font-size: clamp(22px, 2.4vw, 30px); letter-spacing: -0.03em; line-height: 1.1; }
+.tile h3 {
+  margin-top: 36px;
+  font-size: clamp(22px, 2.4vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  line-height: 1.08;
+  color: var(--title);
+}
 .tile p { margin-top: 10px; font-size: 14px; line-height: 1.5; color: rgba(17, 17, 17, 0.68); }
 .tile-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 18px; }
 .tile-tags span {
@@ -607,7 +615,13 @@ p { margin: 0; }
   text-transform: uppercase;
   color: var(--ash);
 }
-.rail-card h3 { margin-top: 10px; font-size: 23px; letter-spacing: -0.03em; }
+.rail-card h3 {
+  margin-top: 10px;
+  font-size: 23px;
+  font-weight: 700;
+  letter-spacing: -0.035em;
+  color: var(--title);
+}
 .rail-copy { margin-top: 8px; font-size: 14px; line-height: 1.55; color: var(--ash); }
 .rail-foot {
   display: flex;
@@ -640,7 +654,13 @@ p { margin: 0; }
   letter-spacing: 0.12em;
   color: var(--orange);
 }
-.step h3 { margin: 18px 0 9px; font-size: 21px; letter-spacing: -0.025em; }
+.step h3 {
+  margin: 18px 0 9px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--title);
+}
 .step p { font-size: 14px; line-height: 1.55; color: var(--ash); }
 
 /* =========================================================================
@@ -737,7 +757,14 @@ p { margin: 0; }
   text-transform: uppercase;
   color: var(--ash);
 }
-.post h3 { margin-top: 10px; font-size: 20px; letter-spacing: -0.025em; line-height: 1.25; }
+.post h3 {
+  margin-top: 10px;
+  font-size: 21px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.22;
+  color: var(--title);
+}
 .post p { margin-top: 9px; font-size: 14px; line-height: 1.55; color: var(--ash); }
 
 /* =========================================================================
