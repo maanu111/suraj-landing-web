@@ -42,6 +42,11 @@ export async function generateMetadata(): Promise<Metadata> {
   const twitter = seoStr(seo.twitterHandle);
   const locale = seoStr(seo.locale) || "en_IN";
   const blocked = /^(yes|true|1)$/i.test(seoStr(seo.noindex));
+  // Search Console's "HTML tag" method. Google pastes a long token; accept
+  // either the bare token or the whole <meta> tag, since both get pasted.
+  const googleVerification =
+    seoStr(seo.googleVerification).match(/content=["']([^"']+)["']/)?.[1] ||
+    seoStr(seo.googleVerification);
 
   // Falls back to the generated opengraph-image.tsx when none is set.
   const images = ogImage ? [{ url: absoluteUrl(origin, ogImage), width: 1200, height: 630, alt: title }] : undefined;
@@ -55,6 +60,7 @@ export async function generateMetadata(): Promise<Metadata> {
     generator: "Next.js",
     referrer: "origin-when-cross-origin",
     alternates: { canonical: "/" },
+    verification: googleVerification ? { google: googleVerification } : undefined,
     robots: blocked
       ? { index: false, follow: false }
       : {
