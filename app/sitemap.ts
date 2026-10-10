@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { getContentLastModified } from "@/lib/get-content";
 import { getSeo } from "@/lib/seo";
 
 /**
@@ -10,7 +11,7 @@ import { getSeo } from "@/lib/seo";
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const { origin } = await getSeo();
 
-  const lastModified = new Date();
+  const lastModified = await getContentLastModified();
 
   return [
     { url: origin, lastModified, changeFrequency: "weekly", priority: 1 },

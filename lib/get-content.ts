@@ -45,3 +45,31 @@ export async function getContent(): Promise<SiteContent> {
 
   return merged;
 }
+
+/**
+ * When the content was last actually edited, for <lastmod> in the sitemap.
+ *
+ * Previously the sitemap sent `new Date()`, so every fetch claimed the pages
+ * had just changed. Google's guidance is that a lastmod it cannot trust is a
+ * lastmod it ignores, so this reads the real timestamp instead.
+ */
+export async function getContentLastModified(): Promise<Date> {
+  if (!SUPABASE_URL || !SUPABASE_KEY) return new Date();
+
+  try {
+    const response = await fetch(
+      `${SUPABASE_URL}/rest/v1/site_content?select=updated_at&order=updated_at.desc&limit=1`,
+      {
+        headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        cache: "no-store",
+      },
+    );
+    if (!response.ok) return new Date();
+
+    const [row] = (await response.json()) as { updated_at?: string }[];
+    const stamp = row?.updated_at ? new Date(row.updated_at) : null;
+    return stamp && !Number.isNaN(stamp.getTime()) ? stamp : new Date();
+  } catch {
+    return new Date();
+  }
+}

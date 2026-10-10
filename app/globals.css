@@ -1159,8 +1159,10 @@ p { margin: 0; }
   width: 100%;
   /* Scales to the word, not to a guess. The old fixed 22vw was sized for
      "STUDIO"; an 11-letter name overflowed the viewport. 122vw/chars keeps
-     roughly the 80% fill that 6 letters used to give. */
-  font-size: clamp(40px, calc(122vw / var(--chars, 6)), 320px);
+     roughly the fill 6 letters used to give. No lower bound on purpose: a
+     px floor is itself an overflow on a narrow phone once a name is long
+     enough, and this is decoration, so shrinking is the right failure. */
+  font-size: min(calc(122vw / var(--chars, 6)), 320px);
   font-weight: 900;
   line-height: 0.78;
   letter-spacing: -0.055em;
