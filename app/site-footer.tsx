@@ -1,3 +1,4 @@
+import type { CSSProperties } from "react";
 import BrandMark from "./brand-mark";
 const str = (value: unknown) => (typeof value === "string" ? value : "");
 const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string, unknown>[]) : []);
@@ -10,13 +11,15 @@ export default function SiteFooter({
   brand: Record<string, unknown>;
   footer: Record<string, unknown>;
 }) {
+  const bigMark = str(footer.bigMark) || str(brand.wordmark);
+
   return (
   <footer className="footer">
     {/* Sign-off band — the last conversion prompt before the link grid. */}
     <div className="shell footer-top">
       <div>
         <p className="footer-status">
-          <BrandMark />
+          <i aria-hidden="true" />
           {str(footer.statusText)}
         </p>
         <h2 className="footer-cta-title">{str(footer.ctaTitle)}</h2>
@@ -31,7 +34,7 @@ export default function SiteFooter({
       <div className="footer-grid">
         <div className="footer-about-col">
           <a className="wordmark" href="/" aria-label={`${str(brand.wordmark)} — back to the home page`}>
-            <i aria-hidden="true" />
+            <BrandMark />
             {str(brand.wordmark)}
             <span>{str(brand.tagline)}</span>
           </a>
@@ -71,9 +74,11 @@ export default function SiteFooter({
       </div>
     </div>
 
-    {/* Oversized wordmark — the modern footer signature. Decorative only. */}
+    {/* Oversized wordmark — the modern footer signature. Decorative only.
+        --chars lets the CSS scale the type to the word, so a long name does
+        not run off the side of the viewport. */}
     <div className="footer-mark" aria-hidden="true">
-      <span>{str(footer.bigMark) || str(brand.wordmark)}</span>
+      <span style={{ "--chars": bigMark.length } as CSSProperties}>{bigMark}</span>
     </div>
   </footer>
   );
