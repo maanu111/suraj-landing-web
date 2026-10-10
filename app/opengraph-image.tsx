@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 import { getSeo, seoStr } from "@/lib/seo";
 
-export const alt = "Studio — Marketing & Video Editing";
+export const alt = "CameraCraft — Marketing & Video Editing";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 
@@ -12,7 +12,7 @@ export const contentType = "image/png";
  */
 export default async function OpengraphImage() {
   const { seo } = await getSeo();
-  const siteName = seoStr(seo.siteName) || "Studio";
+  const siteName = seoStr(seo.siteName) || "CameraCraft";
   const title = seoStr(seo.title) || siteName;
   const description = seoStr(seo.description);
 

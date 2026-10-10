@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import BrandMark from "./brand-mark";
 
 type Link = { label: string; href: string };
 
@@ -53,7 +54,7 @@ export default function SiteNav({
           aria-label={`${wordmark} — back to the home page`}
           onClick={() => setOpen(false)}
         >
-          <i aria-hidden="true" />
+          <BrandMark />
           {wordmark}
           <span>{tagline}</span>
         </a>

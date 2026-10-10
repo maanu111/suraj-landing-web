@@ -4,7 +4,7 @@ import { getSeo, seoStr } from "@/lib/seo";
 /** Served at /manifest.webmanifest — installability and richer mobile results. */
 export default async function manifest(): Promise<MetadataRoute.Manifest> {
   const { seo } = await getSeo();
-  const name = seoStr(seo.siteName) || "Studio";
+  const name = seoStr(seo.siteName) || "CameraCraft";
 
   return {
     name: seoStr(seo.title) || name,
@@ -14,6 +14,6 @@ export default async function manifest(): Promise<MetadataRoute.Manifest> {
     display: "standalone",
     background_color: "#faf9f7",
     theme_color: "#faf9f7",
-    icons: [{ src: "/favicon.ico", sizes: "any", type: "image/x-icon" }],
+    icons: [{ src: "/icon.svg", sizes: "any", type: "image/svg+xml" }],
   };
 }

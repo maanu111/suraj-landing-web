@@ -1,3 +1,4 @@
+import BrandMark from "./brand-mark";
 const str = (value: unknown) => (typeof value === "string" ? value : "");
 const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string, unknown>[]) : []);
 
@@ -15,7 +16,7 @@ export default function SiteFooter({
     <div className="shell footer-top">
       <div>
         <p className="footer-status">
-          <i aria-hidden="true" />
+          <BrandMark />
           {str(footer.statusText)}
         </p>
         <h2 className="footer-cta-title">{str(footer.ctaTitle)}</h2>

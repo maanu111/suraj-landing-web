@@ -39,7 +39,7 @@ export default function WhatsAppForm({ services, budgets, whatsapp, brand }: Pro
 
     const form = new FormData(event.currentTarget);
     const message = [
-      `Hello ${brand || "Studio"} — I’d like to discuss a project.`,
+      `Hello ${brand || "CameraCraft"} — I’d like to discuss a project.`,
       "",
       `Name: ${form.get("name")}`,
       `Company: ${form.get("company") || "—"}`,

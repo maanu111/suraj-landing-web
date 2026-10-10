@@ -14,7 +14,7 @@ const rows = (value: unknown) => (Array.isArray(value) ? (value as Record<string
 export default async function StructuredData() {
   const { seo, origin, content } = await getSeo();
 
-  const siteName = seoStr(seo.siteName) || "Studio";
+  const siteName = seoStr(seo.siteName) || "CameraCraft";
   const businessName = seoStr(seo.businessName) || siteName;
   const description = seoStr(seo.description);
 
