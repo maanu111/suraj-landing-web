@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  // Hostinger's Node.js hosting starts Next's standalone server for us, so the
+  // build has to emit one. It also trims the deployed bundle to just the files
+  // actually traced, which matters on a shared plan's disk quota.
+  output: "standalone",
   // cacheComponents was removed deliberately. It is what froze the deployed
   // content: pages were fully prerendered at build time and the data was
   // never re-read. Standard ISR is predictable and builds reliably.

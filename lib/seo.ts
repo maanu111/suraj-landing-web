@@ -12,20 +12,29 @@ export function normaliseOrigin(value: string): string {
 }
 
 /**
- * Origin taken from the build environment.
+ * Origin taken from the hosting environment, used only when the admin has not
+ * set a canonical domain.
  *
- * Vercel injects both of these automatically, so nothing has to be configured
- * by hand. VERCEL_PROJECT_PRODUCTION_URL is the stable production domain and
- * is preferred — VERCEL_URL changes on every deployment, which is wrong for a
- * canonical link.
+ * Vercel injects both of these automatically. VERCEL_PROJECT_PRODUCTION_URL is
+ * the stable production domain and is preferred — VERCEL_URL changes on every
+ * deployment, which is wrong for a canonical link.
  *
- * This is resolved at build time on purpose. robots.txt, sitemap.xml and the
- * Open Graph image are prerendered as static files, and metadata may not read
- * request data, so an origin stored in the database could never reach them.
+ * Nothing equivalent exists on Hostinger's Node.js hosting, so there the
+ * origin has to come from SEO → “Canonical domain” in the admin. If it is
+ * blank the fallback below is localhost, which would quietly publish a sitemap
+ * and canonical tags pointing at a machine nobody can reach — hence the error.
  */
 function environmentOrigin(): string {
   const host = process.env.VERCEL_PROJECT_PRODUCTION_URL || process.env.VERCEL_URL;
   if (host) return `https://${host}`.replace(/\/+$/, "");
+
+  if (process.env.NODE_ENV === "production") {
+    console.error(
+      "[seo] No canonical domain. Set SEO → “Canonical domain” in the admin " +
+        "(e.g. https://cameracraft.in) — canonicals, sitemap.xml, robots.txt and " +
+        "the OG image are all falling back to http://localhost:3000.",
+    );
+  }
   return "http://localhost:3000";
 }
 
