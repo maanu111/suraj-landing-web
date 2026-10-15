@@ -62,6 +62,7 @@ export default async function Home() {
       <SiteNav
         wordmark={str(brand.wordmark)}
         tagline={str(brand.tagline)}
+        logo={str(brand.logo)}
         links={rows(brand.navLinks).map((link) => ({ label: str(link.label), href: str(link.href) }))}
         ctaLabel={str(brand.ctaLabel)}
         ctaHref={str(brand.ctaHref)}
@@ -298,6 +299,39 @@ export default async function Home() {
           </div>
         </section>
 
+        {/* ---------------------------------------------------------- BLOGS */}
+        <section className="section" id="blogs">
+          <div className="shell">
+            <div className="sec-head">
+              <div>
+                <p className="eyebrow">{str(blogs.eyebrow)}</p>
+                <h2 className="h2">{str(blogs.heading)}</h2>
+              </div>
+              <p className="muted">{str(blogs.note)}</p>
+            </div>
+            <Slider label="Blog posts" className="posts" autoMs={5800}>
+              {rows(blogs.items).map((post, i) => {
+                const image = str(post.image);
+                return (
+                  <article className="post" data-reveal key={i}>
+                    <a className="post-art" href={str(post.href) || "#blogs"} aria-label={`Read: ${str(post.title)}`}>
+                      {image ? <SmartImage src={image} alt="" sizes="(max-width: 600px) 82vw, 372px" /> : null}
+                      <b>{str(post.art)}</b>
+                      <i>{str(post.kicker)}</i>
+                    </a>
+                    <div className="post-meta">
+                      <span>{str(post.category)}</span>
+                      <span>{str(post.read)}</span>
+                    </div>
+                    <h3>{str(post.title)}</h3>
+                    <p>{str(post.copy)}</p>
+                  </article>
+                );
+              })}
+            </Slider>
+          </div>
+        </section>
+
         {/* -------------------------------------------------------- REVIEWS */}
         <section className="section dark" id="reviews">
           <div className="shell">
@@ -338,39 +372,6 @@ export default async function Home() {
                       </div>
                     </footer>
                   </figure>
-                );
-              })}
-            </Slider>
-          </div>
-        </section>
-
-        {/* ---------------------------------------------------------- BLOGS */}
-        <section className="section" id="blogs">
-          <div className="shell">
-            <div className="sec-head">
-              <div>
-                <p className="eyebrow">{str(blogs.eyebrow)}</p>
-                <h2 className="h2">{str(blogs.heading)}</h2>
-              </div>
-              <p className="muted">{str(blogs.note)}</p>
-            </div>
-            <Slider label="Blog posts" className="posts" autoMs={5800}>
-              {rows(blogs.items).map((post, i) => {
-                const image = str(post.image);
-                return (
-                  <article className="post" data-reveal key={i}>
-                    <a className="post-art" href={str(post.href) || "#blogs"} aria-label={`Read: ${str(post.title)}`}>
-                      {image ? <SmartImage src={image} alt="" sizes="(max-width: 600px) 82vw, 372px" /> : null}
-                      <b>{str(post.art)}</b>
-                      <i>{str(post.kicker)}</i>
-                    </a>
-                    <div className="post-meta">
-                      <span>{str(post.category)}</span>
-                      <span>{str(post.read)}</span>
-                    </div>
-                    <h3>{str(post.title)}</h3>
-                    <p>{str(post.copy)}</p>
-                  </article>
                 );
               })}
             </Slider>

@@ -12,6 +12,7 @@ type Link = { label: string; href: string };
 export default function SiteNav({
   wordmark,
   tagline,
+  logo,
   links,
   ctaLabel,
   ctaHref,
@@ -20,6 +21,8 @@ export default function SiteNav({
 }: {
   wordmark: string;
   tagline: string;
+  /** Optional logo image; falls back to the dot mark. */
+  logo?: string;
   links: Link[];
   ctaLabel: string;
   ctaHref: string;
@@ -54,7 +57,7 @@ export default function SiteNav({
           aria-label={`${wordmark} — back to the home page`}
           onClick={() => setOpen(false)}
         >
-          <BrandMark />
+          <BrandMark src={logo} />
           {wordmark}
           <span>{tagline}</span>
         </a>

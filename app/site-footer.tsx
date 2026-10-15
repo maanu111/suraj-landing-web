@@ -34,7 +34,7 @@ export default function SiteFooter({
       <div className="footer-grid">
         <div className="footer-about-col">
           <a className="wordmark" href="/" aria-label={`${str(brand.wordmark)} — back to the home page`}>
-            <BrandMark />
+            <BrandMark src={str(brand.logo)} />
             {str(brand.wordmark)}
             <span>{str(brand.tagline)}</span>
           </a>

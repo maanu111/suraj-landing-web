@@ -278,6 +278,13 @@ p { margin: 0; }
   background: var(--orange);
   font-style: normal;
 }
+.wordmark-logo {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  align-self: center;
+}
+.footer .wordmark-logo { width: 34px; height: 34px; }
 .wordmark span {
   font-family: var(--font-mono), monospace;
   font-size: 9px;

@@ -58,6 +58,7 @@ export default async function AboutPage() {
       <SiteNav
         wordmark={str(brand.wordmark)}
         tagline={str(brand.tagline)}
+        logo={str(brand.logo)}
         links={rows(brand.navLinks).map((link) => ({ label: str(link.label), href: str(link.href) }))}
         ctaLabel={str(brand.ctaLabel)}
         ctaHref={str(brand.ctaHref)}
