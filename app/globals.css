@@ -863,7 +863,24 @@ p { margin: 0; }
   line-height: 1.22;
   color: var(--title);
 }
-.post p { margin-top: 9px; font-size: 14px; line-height: 1.55; color: var(--ash); }
+.post h3 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+/* Excerpts come from the admin and can run to several hundred words — one long
+   one used to set the height of every card in the row. Clamp to a preview. */
+.post p {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 5;
+  margin-top: 9px;
+  overflow: hidden;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--ash);
+}
 
 /* =========================================================================
    CONTACT + FORM
