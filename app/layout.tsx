@@ -91,7 +91,10 @@ export async function generateMetadata(): Promise<Metadata> {
       creator: twitter || undefined,
       images,
     },
-    icons: { icon: "/icon.png", apple: "/apple-icon.png" },
+    icons: {
+      icon: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+      apple: [{ url: "/icon.png", type: "image/png", sizes: "512x512" }],
+    },
     formatDetection: { telephone: false, date: false, email: false, address: false },
   };
 }

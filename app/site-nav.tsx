@@ -48,6 +48,11 @@ export default function SiteNav({
     };
   }, [open]);
 
+  // A stale admin value such as "/home" should never send visitors to a
+  // route the landing site does not provide.
+  const hrefFor = (link: Link) =>
+    link.label.trim().toLowerCase() === "home" ? (isHome ? "#top" : "/") : link.href || "#";
+
   return (
     <header className="nav" data-nav data-over-dark={overDark || undefined}>
       <div className="shell nav-inner">
@@ -58,13 +63,13 @@ export default function SiteNav({
           onClick={() => setOpen(false)}
         >
           <BrandMark src={logo} />
-          {wordmark}
-          <span>{tagline}</span>
+          <span className="wordmark-name">{wordmark}</span>
+          <span className="wordmark-tagline">{tagline}</span>
         </a>
 
         <nav className="nav-links" aria-label="Main navigation">
           {links.map((link, i) => (
-            <a key={i} href={link.href || "#"}>
+            <a key={i} href={hrefFor(link)}>
               {link.label}
             </a>
           ))}
@@ -89,7 +94,7 @@ export default function SiteNav({
       <div className="nav-drawer" data-open={open || undefined} hidden={!open}>
         <nav aria-label="Mobile navigation">
           {links.map((link, i) => (
-            <a key={i} href={link.href || "#"} onClick={() => setOpen(false)}>
+            <a key={i} href={hrefFor(link)} onClick={() => setOpen(false)}>
               {link.label}
               <span aria-hidden="true">↗</span>
             </a>

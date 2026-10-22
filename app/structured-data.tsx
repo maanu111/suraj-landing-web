@@ -17,6 +17,7 @@ export default async function StructuredData() {
   const siteName = seoStr(seo.siteName) || "CameraCraft";
   const businessName = seoStr(seo.businessName) || siteName;
   const description = seoStr(seo.description);
+  const logo = seoStr(content.brand?.logo) || "/brand-logo.png";
 
   const socials = rows(content.footer?.socials)
     .map((s) => seoStr(s.href))
@@ -48,6 +49,7 @@ export default async function StructuredData() {
     alternateName: siteName !== businessName ? siteName : undefined,
     description,
     url: origin,
+    logo: absoluteUrl(origin, logo),
     image: absoluteUrl(origin, seoStr(seo.ogImage) || "/opengraph-image"),
     telephone: seoStr(seo.phone) || undefined,
     email: seoStr(seo.email) || undefined,

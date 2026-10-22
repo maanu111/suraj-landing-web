@@ -83,6 +83,7 @@
 * { box-sizing: border-box; }
 
 html {
+  overflow-x: clip;
   scroll-behavior: smooth;
   background: var(--paper);
   -webkit-text-size-adjust: 100%;
@@ -224,7 +225,7 @@ p { margin: 0; }
    it returns to the frosted light bar the rest of the site uses. */
 .nav[data-over-dark]:not(.is-stuck) .wordmark { color: #fff; }
 .nav[data-over-dark]:not(.is-stuck) .wordmark i { background: var(--gold); }
-.nav[data-over-dark]:not(.is-stuck) .wordmark span { color: rgba(255, 255, 255, 0.55); }
+.nav[data-over-dark]:not(.is-stuck) .wordmark-tagline { color: rgba(255, 255, 255, 0.55); }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a { color: rgba(255, 255, 255, 0.82); }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a:hover { color: #fff; }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a::after { background: var(--gold); }
@@ -265,12 +266,14 @@ p { margin: 0; }
 }
 .wordmark {
   display: inline-flex;
-  align-items: baseline;
+  align-items: center;
   gap: 8px;
   font-size: 19px;
   font-weight: 700;
   letter-spacing: -0.05em;
+  white-space: nowrap;
 }
+.wordmark-name { white-space: nowrap; }
 .wordmark i {
   width: 9px;
   height: 9px;
@@ -285,13 +288,14 @@ p { margin: 0; }
   align-self: center;
 }
 .footer .wordmark-logo { width: 34px; height: 34px; }
-.wordmark span {
+.wordmark-tagline {
   font-family: var(--font-mono), monospace;
   font-size: 9px;
   font-weight: 400;
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--ash);
+  line-height: 1.5;
 }
 .nav-links { display: flex; gap: clamp(18px, 2.4vw, 34px); }
 .nav-links a {
@@ -468,7 +472,30 @@ p { margin: 0; }
   .mosaic { grid-template-columns: 1fr 1fr; grid-template-rows: repeat(4, 23vw); }
   .mosaic-tile:nth-child(1) { grid-column: span 2; grid-row: span 1; }
   .mosaic-tile:nth-child(4) { grid-row: span 1; }
-  .hero-dark-actions .btn { flex: 1; justify-content: center; }
+  .hero-dark-sub {
+    width: calc(100vw - var(--gutter) - var(--gutter));
+    max-width: calc(100vw - var(--gutter) - var(--gutter));
+    font-size: clamp(9px, 2.5vw, 11px);
+    letter-spacing: 0.07em;
+    white-space: normal;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+  }
+  .hero-dark-actions {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: calc(100vw - var(--gutter) - var(--gutter));
+    min-width: 0;
+  }
+  .hero-dark-actions .btn {
+    min-width: 0;
+    width: 100%;
+    justify-content: center;
+    padding-inline: 10px;
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    white-space: normal;
+  }
 }
 
 /* The hero's gradient carried into the light sections, at a fraction of the
@@ -1100,7 +1127,7 @@ p { margin: 0; }
   gap: clamp(28px, 3vw, 48px);
   padding-bottom: clamp(32px, 4vw, 52px);
 }
-.footer .wordmark span { color: var(--stone); }
+.footer .wordmark-tagline { color: var(--stone); }
 .footer-about { max-width: 34ch; margin-top: 14px; font-size: 14px; color: var(--stone); }
 
 .footer-socials { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }
@@ -1266,7 +1293,7 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
    it returns to the frosted light bar the rest of the site uses. */
 .nav[data-over-dark]:not(.is-stuck) .wordmark { color: #fff; }
 .nav[data-over-dark]:not(.is-stuck) .wordmark i { background: var(--gold); }
-.nav[data-over-dark]:not(.is-stuck) .wordmark span { color: rgba(255, 255, 255, 0.55); }
+.nav[data-over-dark]:not(.is-stuck) .wordmark-tagline { color: rgba(255, 255, 255, 0.55); }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a { color: rgba(255, 255, 255, 0.82); }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a:hover { color: #fff; }
 .nav[data-over-dark]:not(.is-stuck) .nav-links a::after { background: var(--gold); }
@@ -1307,6 +1334,67 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
 }
 
 @media (max-width: 600px) {
+  .nav-inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    height: 64px;
+    gap: clamp(6px, 2vw, 8px);
+    padding-inline: 12px;
+  }
+  .nav .wordmark {
+    flex: 0 1 auto;
+    width: clamp(156px, 51.3vw, 200px);
+    max-width: 100%;
+    min-width: 0;
+    gap: clamp(3px, 1.3vw, 5px);
+  }
+  .nav .wordmark-logo {
+    width: clamp(22px, 6.7vw, 26px);
+    height: clamp(22px, 6.7vw, 26px);
+    flex: 0 0 clamp(22px, 6.7vw, 26px);
+  }
+  .nav .wordmark-name {
+    flex: 0 0 clamp(76px, 22.6vw, 88px);
+    width: clamp(76px, 22.6vw, 88px);
+    max-width: clamp(76px, 22.6vw, 88px);
+    font-size: clamp(11px, 3.2vw, 12.5px);
+  }
+  .nav .wordmark-tagline {
+    flex: 0 0 clamp(52px, 19vw, 74px);
+    width: clamp(52px, 19vw, 74px);
+    max-width: clamp(52px, 19vw, 74px);
+    font-size: clamp(6.5px, 1.8vw, 7px);
+    letter-spacing: 0.04em;
+    line-height: 1.25;
+    white-space: normal;
+  }
+  .nav-cta { flex: 0 0 auto; justify-self: end; gap: clamp(4px, 1.5vw, 6px); }
+  .nav .nav-cta-btn {
+    flex: 0 0 clamp(90px, 28.7vw, 112px);
+    width: clamp(90px, 28.7vw, 112px);
+    min-width: clamp(90px, 28.7vw, 112px);
+    max-width: clamp(90px, 28.7vw, 112px);
+    gap: 3px;
+    padding: 8px 4px;
+    font-size: clamp(7px, 2.18vw, 8.5px);
+    letter-spacing: 0.03em;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  .nav[data-over-dark]:not(.is-stuck) .nav-cta-btn {
+    padding: 8px 4px;
+    font-size: clamp(7px, 2.18vw, 8.5px);
+    letter-spacing: 0.03em;
+    white-space: nowrap;
+  }
+  .nav-burger {
+    width: clamp(32px, 9.2vw, 36px);
+    height: clamp(32px, 9.2vw, 36px);
+    flex: 0 0 clamp(32px, 9.2vw, 36px);
+  }
+}
+
+@media (max-width: 600px) {
   .hero-reel { grid-template-columns: 1fr 1fr; }
   .hero-reel .reel-frame:nth-child(3) { display: none; }
   .hero-reel .reel-frame:nth-child(2) { margin-top: 0; }
@@ -1338,7 +1426,6 @@ html.motion-ready [data-reveal].is-visible { opacity: 1; transform: none; }
   .numbers { grid-template-columns: 1fr; }
   .numbers b { font-size: 40px; }
   .hero-stats b { font-size: 23px; }
-  .nav-cta-btn { display: none; }
   .cta-actions .btn { width: 100%; justify-content: center; }
 }
 
